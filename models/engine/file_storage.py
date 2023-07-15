@@ -39,14 +39,13 @@ class FileStorage():
             """attempt to open file in __file_path path and deserialise it"""
             with open(self.__file_path, 'r') as f:
                 objt = json.load(f)
-            
 
             for key, value in objt.items():
                 """splits the key into class_name and obj_id"""
                 class_name, objt_id = key.split('.')
                 name_class = BaseModel
 
-                """if class name is available in globals retrieve class object"""
+                """retrieve class object if availables in globals"""
                 if class_name in globals():
                     name_class = globals()[class_name]
 
@@ -55,4 +54,3 @@ class FileStorage():
                 self.__objects[key] = obj
         except FileNotFoundError:
             pass
- 
