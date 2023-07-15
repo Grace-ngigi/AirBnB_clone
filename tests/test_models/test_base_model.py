@@ -8,12 +8,47 @@ class TestBaseModel(unittest.TestCase):
     """test instance variables"""
 
     def test_init(self):
+        kwargs = {
+            'id': 'e3a73f8c-2ef1-4f4d-8a93-ae67e87d23be',
+            'created_at': '2023-07-11T3:30:00.000000',
+            'updated_at': '2023-07-11T3:30:00.000000',
+            'name': 'Test Model'
+        }
+
+        model = BaseModel(**kwargs)
+
+        self.assertEqual(model.id, 'e3a73f8c-2ef1-4f4d-8a93-ae67e87d23be')
+        self.assertEqual(model.name, 'Test Model')
+        self.assertIsInstance(model.created_at, datetime)
+        self.assertIsInstance(model.updated_at, datetime)
+        self.assertEqual(model.created_at, datetime(2023, 7, 11, 3, 30, 0))
+        self.assertEqual(model.updated_at, datetime(2023, 7, 11, 3, 30, 0))
+
+    def test_init_without_kwargs(self):
         model = BaseModel()
 
         self.assertIsNotNone(model.id)
         self.assertIsInstance(model.created_at, datetime)
         self.assertIsInstance(model.updated_at, datetime)
         self.assertEqual(model.created_at, model.updated_at)
+
+    def test_init_with_invalid_kwargs(self):
+        kwargs = {
+            '__class__': 'InvalidClass',
+            'created_at': '2023-07-11T3:30:00.000000',
+            'updated_at': '2023-07-11T3:30:00.000000',
+            'name': 'Test Model'
+        }
+
+        model = BaseModel(**kwargs)
+
+        self.assertEqual(model.__class__.__name__, 'BaseModel')
+        self.assertEqual(model.name, 'Test Model')
+        self.assertIsInstance(model.created_at, datetime)
+        self.assertIsInstance(model.updated_at, datetime)
+        self.assertEqual(model.created_at, datetime(2023, 7, 11, 3, 30, 0))
+        self.assertEqual(model.updated_at, datetime(2023, 7, 11, 3, 30, 0))
+
 
     def test_save(self):
         """test save function to assert that chnages are being made"""
